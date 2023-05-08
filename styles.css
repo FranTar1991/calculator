@@ -1,7 +1,14 @@
 
-
+*{
+    box-sizing: border-box;
+    font-family: cursive;
+}
 body{
     background-color: black;
+    display: flex;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
 }
 
 .calculator-container{
@@ -17,6 +24,11 @@ body{
 .calculator-display{
     height: 80px;
     background-color: aliceblue;
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+    padding: 8px;
+    font-size: 28px;
 }
 
 .calculator-container, .calculator-display{
@@ -27,7 +39,6 @@ body{
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    box-sizing: border-box;
     align-items: center;
 }
 
@@ -40,13 +51,11 @@ body{
     color: black;
     font-weight: 20%;
     font-size: 18px;
-    font-family: cursive;
     border-radius: 8px;
     padding: 4px;
     display: flex;
     justify-content: center;
-    align-items: center;
-    box-sizing: border-box;
+    align-items: center;    
     border: solid 2px rgb(153, 153, 153);
 }
 
