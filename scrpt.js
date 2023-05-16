@@ -1,13 +1,28 @@
 
 
-let buttonsContainer = document.getElementById("numbers-container")
-let display = document.getElementById("calculator-display")
+const buttonsContainer = document.getElementById("numbers-container")
+const display = document.getElementById("calculator-display")
+const deleteBtn = document.getElementById("delete-btn")
 let displayText 
 let number1 = ""
 let number2 = ""
 let operator =""
-let callingEquals = false
+let equalsPressed = false
 const operators = {Addition: "+",Subtraction:"-",Division:"÷",Multiplication:"x", Equals: "="}
+
+deleteBtn.addEventListener("click",() =>{
+    if(operator){
+       number2 ? number2 = removeLastNumber(number2)  : operator = "" 
+    } else {
+        number1 = removeLastNumber(number1)  
+    }
+    updateDisplay()
+})
+
+function removeLastNumber(operand){
+    let stringOperand = operand.toString()
+    return  stringOperand.length <= 1 && !number2 ? 0 : stringOperand.slice(0,-1)
+}
 
 for(let button of buttonsContainer.children){
     switch(button.innerText){
@@ -20,7 +35,7 @@ for(let button of buttonsContainer.children){
         case operators.Equals:
             button.addEventListener("click", ()=> {
                 operate(operator, number1, number2)
-                callingEquals = true})
+                equalsPressed = true})
             break
         default:
             button.addEventListener("click",setNumberClickListener)
@@ -29,42 +44,66 @@ for(let button of buttonsContainer.children){
 
 
 function updateDisplay(){
+    
     display.innerText = number1+operator+number2
+  
+    if (number1 == 0) number1 = ""
 }
 
 function setOperationClickListener(button){
     const op =  button.target.innerText
-    console.log("operator"+op)
-    if(number2 || number2 === 0){
-        operate(operator, number1, number2)
-    }
-    if(number1 || number1 === 0){
+    const number2Exist = number2 || number2 === 0
+    const number1Exist = number1 || number1 === 0
+    
+    if(number2Exist){
+        operate(operator, number1, number2, true, op)
+        
+    }else if(number1Exist){
         operator = op
         updateDisplay()
     } 
 
 }
 
-function setNumberClickListener2(button){
+function setNumberClickListener(button){
     const number = button.target.innerText
-   
+    
    if (!operator){
-        if(!callingEquals){
-            number1 += number
-        }  else{
-            number1 = number
-            callingEquals = false
-        } 
+    
+    if (!checkIfValidNumber(number1.toString(), number)) return
+    equalsPressed ? handleEqualsPressed(number) : number1 += number
    } else{
+    if (!checkIfValidNumber(number2.toString(), number)) return
     number2 += number
    } 
 
     updateDisplay()
 }
 
-function operate(op, n1, n2){
+function checkIfValidNumber(currentNumber, newDigit){
+    let numberDecimals = []
+    let isValidNumber = true
+    if(currentNumber.includes(".") && newDigit === ".") {
+        isValidNumber = false
+    }else if(currentNumber.toString().includes(".")){
+        
+        numberDecimals = currentNumber.split(".")[1]
+        console.log(currentNumber+" "+numberDecimals.length)
+        isValidNumber = numberDecimals.length >= 2 ? false : true
+    }
+    
+    return isValidNumber
+    
+}
 
-    if(!op || (!n1 && n1 !== 0) || (!n2 && n2 !== 0)) return
+function handleEqualsPressed(number){
+        number1 = number
+        equalsPressed = false
+}
+
+function operate(op, n1, n2, isNewOperation = false, newOp){
+
+    if(!op || (!n1 && n1 !== 0) || (!n2 && n2 !== 0) || checkIfDivisionByZero(op, n2)) return
     let result
 
     switch(op){
@@ -82,9 +121,19 @@ function operate(op, n1, n2){
             break
 
     }
-    number1 =  Number.isInteger(result) ? result : result.toFixed(2) 
+    number1 =  Number.isInteger(result) ? result : result.toFixed(2)
     number2 = ""
-    operator = ""
+    operator = isNewOperation ? newOp : ""
     updateDisplay()
+}
+
+function checkIfDivisionByZero(op, n2){
+
+    return op === operators.Division && n2 == 0 ? showAlertDivisionZero() : false
+}
+
+function showAlertDivisionZero(){
+    alert("Error: Dividing by zero? Nope, can't do that. It's a one-way ticket to the land of mathematical absurdity.")
+    return true
 }
 

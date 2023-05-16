@@ -23,17 +23,23 @@ body{
     gap: 8px;
     border: 1px solid white;
 }
-#calculator-display{
+#calculator-display-container{
     height: 80px;
     background-color: aliceblue;
+    width: 100%;
+    margin-right: 0;
+    padding: 8px;
     display: flex;
     align-items: flex-end;
     justify-content: flex-end;
-    padding: 8px;
     font-size: 28px;
 }
+#calculator-display{
+    text-align: end;
+    overflow-x: auto;
+}
 
-.calculator-container, #calculator-display{
+.calculator-container, #calculator-display-container{
     border-radius: 8px;
 }
 
