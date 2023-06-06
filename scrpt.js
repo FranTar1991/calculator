@@ -3,6 +3,7 @@
 const buttonsContainer = document.getElementById("numbers-container")
 const display = document.getElementById("calculator-display")
 const deleteBtn = document.getElementById("delete-btn")
+const clearBtn = document.getElementById("clear-btn")
 let displayText 
 let number1 = ""
 let number2 = ""
@@ -19,6 +20,9 @@ deleteBtn.addEventListener("click",() =>{
     updateDisplay()
 })
 
+clearBtn.addEventListener("click",()=>{
+    location.reload()
+})
 function removeLastNumber(operand){
     let stringOperand = operand.toString()
     return  stringOperand.length <= 1 && !number2 ? 0 : stringOperand.slice(0,-1)
@@ -76,6 +80,10 @@ function setNumberClickListener(button){
     if (!checkIfValidNumber(number2.toString(), number)) return
     number2 += number
    } 
+
+   //If I click on any other button after performing an opertation that results in a decimal number
+   //printed in the display, the application does not update the UI because
+   // it recognizes the number as invalid because it already has 2 decimals.
 
     updateDisplay()
 }
